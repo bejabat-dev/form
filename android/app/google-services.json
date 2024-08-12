@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "168294486967",
+    "firebase_url": "https://polaku061199-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "polaku061199",
+    "storage_bucket": "polaku061199.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168294486967:android:eebf66bf9060011cdbce32",
+        "android_client_info": {
+          "package_name": "com.example.a1projectfix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC144y5bNpViEVUJZOH5J_R8fJalTEhB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168294486967:android:013177cd0e542963dbce32",
+        "android_client_info": {
+          "package_name": "com.nuhundev.polaku"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC144y5bNpViEVUJZOH5J_R8fJalTEhB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168294486967:android:b244914d4e3834acdbce32",
+        "android_client_info": {
+          "package_name": "com.phr.monitoringdetakjantung"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC144y5bNpViEVUJZOH5J_R8fJalTEhB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,8 +12,10 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final utils = Utils();
   final formKey = GlobalKey<FormState>();
-
+  final nama = TextEditingController();
+  final tempat = TextEditingController();
   final tanggal = TextEditingController();
+  final alamat = TextEditingController();
 
   List<String> kelas = ['Reguler', 'Prestasi', 'Khusus'];
   String selectedKelas = 'Reguler';
@@ -43,9 +45,15 @@ class _RegisterState extends State<Register> {
     return DateFormat('dd/MM/yyyy').format(date);
   }
 
-  void daftar() {
+  void daftar() async {
     if (formKey.currentState?.validate() ?? false) {
-      setState(() {});
+      await Utils().register(context, {
+        'nama': nama.text,
+        'tanggal': tanggal.text,
+        'tempat': tempat.text,
+        'alamat': alamat.text,
+        'kelas': selectedKelas
+      });
     }
   }
 
@@ -82,6 +90,7 @@ class _RegisterState extends State<Register> {
                         height: 2,
                       ),
                       TextFormField(
+                        controller: nama,
                         decoration: const InputDecoration(
                             hintText: 'Masukkan nama lengkap'),
                         validator: (value) {
@@ -101,6 +110,7 @@ class _RegisterState extends State<Register> {
                         height: 2,
                       ),
                       TextFormField(
+                        controller: tempat,
                         decoration: const InputDecoration(
                             hintText: 'Masukkan tempat lahir'),
                         validator: (value) {
@@ -144,6 +154,7 @@ class _RegisterState extends State<Register> {
                         height: 2,
                       ),
                       TextFormField(
+                        controller: alamat,
                         maxLines: 3,
                         decoration: const InputDecoration(
                             contentPadding: EdgeInsets.all(8),
