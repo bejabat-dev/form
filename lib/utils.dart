@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:form/register.dart';
 
 class Utils {
+  static Color myColor = const Color.fromARGB(255, 193, 193, 193);
   final db = FirebaseDatabase.instance;
   static Text bintang = const Text(
     '*',
     style: TextStyle(color: Colors.red),
   );
 
-  Future<void> register(BuildContext context,String nama, dynamic data) async {
+  Future<void> register(BuildContext context, String nama, dynamic data) async {
     showLoadingDialog(context);
     await db.ref('Murid').child(nama).set(data).catchError((e) {
       Navigator.pop(context);

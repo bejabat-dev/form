@@ -18,6 +18,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Formulir',
         theme: ThemeData(
             scaffoldBackgroundColor: const Color(0xfff2f2f2),
             inputDecorationTheme: const InputDecorationTheme(
