@@ -24,8 +24,8 @@ class _RegisterState extends State<Register> {
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
-    final DateTime firstDate = DateTime(now.year - 10);
-    final DateTime lastDate = DateTime(now.year + 10);
+    final DateTime firstDate = DateTime(now.year - 70);
+    final DateTime lastDate = DateTime(now.year + 15);
 
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -47,7 +47,8 @@ class _RegisterState extends State<Register> {
 
   void daftar() async {
     if (formKey.currentState?.validate() ?? false) {
-      await Utils().register(context, {
+      await Utils().register(context, nama.text, {
+        'key': nama.text,
         'nama': nama.text,
         'tanggal': tanggal.text,
         'tempat': tempat.text,
@@ -193,7 +194,21 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Center(
+                              child: Icon(Icons.add),
+                            ),
+                          ),
+                          Container()
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 36,
                       ),
                       Material(
                         borderRadius: BorderRadius.circular(8),
