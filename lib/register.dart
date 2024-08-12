@@ -200,35 +200,28 @@ class _RegisterState extends State<Register> {
                         const SizedBox(
                           height: 36,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 150),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  height: 250,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Utils.myColor)),
-                                  child: Center(
-                                    child: Text('Foto profil')
-                                  ),
-                                ),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 250,height: 350,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Utils.myColor)),
+                              child: Center(
+                                child: Text('Foto profil')
                               ),
-                              const SizedBox(
-                                width: 20,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Container(
+                              width: 250,height: 350,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Utils.myColor)),
+                              child: Center(
+                                child: Text('Dokumen tambahan'),
                               ),
-                              Expanded(
-                                child: Container(
-                                  height: 250,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Utils.myColor)),
-                                  child: Center(
-                                    child: Text('Dokumen tambahan'),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           height: 36,
