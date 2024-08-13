@@ -13,7 +13,7 @@ class Utils {
 
   Future<void> register(BuildContext context, String nama, dynamic data) async {
     showLoadingDialog(context);
-    await db.ref('Murid').child(nama).set(data).catchError((e) {
+    await db.ref('Murid').child(nama).update(data).catchError((e) {
       Navigator.pop(context);
       showCustomDialog(context, 'Terjadi kesalahan');
     }).whenComplete(() {

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:form/utils.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class Register extends StatefulWidget {
@@ -10,6 +15,9 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final storage = FirebaseStorage.instance;
+  final db = FirebaseDatabase.instance;
+
   final utils = Utils();
   final formKey = GlobalKey<FormState>();
   final nama = TextEditingController();
@@ -41,8 +49,54 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  File? image1;
+  File? image2;
+
   String formattedDate(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
+  }
+
+  Future<void> getImage(String text, String nama, int foto) async {
+    if (nama.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Masukkan nama terlebih dahulu')));
+    }
+    final f = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (f != null) {
+      uploadImage(File(f.path), text, nama, foto);
+    } else {
+      return;
+    }
+  }
+
+  void uploadImage(File file, String text, String nama, int foto) async {
+    String f = 'foto1';
+    if (foto == 1) {
+      f = 'foto1';
+    } else if (foto == 2) {
+      f = 'foto2';
+    }
+    utils.showLoadingDialog(context);
+    final path = storage.ref('murid/$text');
+    path.putFile(file).catchError((e) {
+      return utils.showCustomDialog(context, 'Terjadi kesalahan');
+    }).whenComplete(() async {
+      if (mounted) {
+        String url = await path.getDownloadURL();
+        await db.ref(nama).update({f: 'nama@$url'});
+        if (mounted) {
+          setState(() {
+            if (foto == 1) {
+              image1 = file;
+            }
+            if (foto == 2) {
+              image2 = file;
+            }
+          });
+          Navigator.pop(context);
+        }
+      }
+    });
   }
 
   void daftar() async {
@@ -53,7 +107,9 @@ class _RegisterState extends State<Register> {
         'tanggal': tanggal.text,
         'tempat': tempat.text,
         'alamat': alamat.text,
-        'kelas': selectedKelas
+        'kelas': selectedKelas,
+        'foto3': 'unset',
+        'register': true
       });
     }
   }
@@ -200,31 +256,41 @@ class _RegisterState extends State<Register> {
                         const SizedBox(
                           height: 36,
                         ),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 250,height: 350,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Utils.myColor)),
-                              child: Center(
-                                child: Text('Foto profil')
+                        SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              image1 == null
+                                  ? Container(
+                                      width: 250,
+                                      height: 350,
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Utils.myColor)),
+                                      child: Center(child: Text('Foto profil')),
+                                    )
+                                  : Image.file(image2!),
+                              const SizedBox(
+                                height: 8,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Container(
-                              width: 250,height: 350,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Utils.myColor)),
-                              child: Center(
-                                child: Text('Dokumen tambahan'),
-                              ),
-                            ),
-                          ],
+                              image2 == null
+                                  ? Container(
+                                      width: 250,
+                                      height: 350,
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Utils.myColor)),
+                                      child: Center(
+                                        child: Text('Dokumen tambahan'),
+                                      ),
+                                    )
+                                  : Image.file(image1!),
+                            ],
+                          ),
                         ),
                         const SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         Material(
                           borderRadius: BorderRadius.circular(8),
@@ -248,6 +314,9 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                           ),
+                        ),
+                        const SizedBox(
+                          height: 50,
                         )
                       ],
                     ),
