@@ -1,4 +1,6 @@
-import 'dart:io';
+
+
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -49,12 +51,14 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  String? image1;
-  String? image2;
+   Uint8List? image1;
+   Uint8List? image2;
 
   String formattedDate(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
   }
+
+  Uint8List? fotos;
 
   Future<void> getImage(String nama, int foto) async {
     if (nama.isEmpty) {
@@ -62,20 +66,20 @@ class _RegisterState extends State<Register> {
           const SnackBar(content: Text('Masukkan nama terlebih dahulu')));
       return;
     }
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png'],
+  final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
     );
 
     //final f = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (result != null) {
-      uploadImage(File(result.files.single.path!), nama, foto);
+      fotos = result.files.single.bytes;
+      uploadImage(nama, foto);
     } else {
       return;
     }
   }
 
-  void uploadImage(File file, String nama, int foto) async {
+  void uploadImage(String nama, int foto) async {
     String f = 'foto1';
     if (foto == 1) {
       f = 'foto1';
@@ -83,20 +87,23 @@ class _RegisterState extends State<Register> {
       f = 'foto2';
     }
     utils.showLoadingDialog(context);
-    final path = storage.ref('murid/$f@$nama');
-    path.putFile(file).catchError((e) {
+    final path = storage.ref('$f@$nama');
+    path.putData(fotos!,SettableMetadata(
+
+        contentType: "image/png"
+    )).catchError((e) {
       return utils.showCustomDialog(context, 'Terjadi kesalahan');
     }).whenComplete(() async {
       if (mounted) {
         String url = await path.getDownloadURL();
-        await db.ref(nama).update({f: url});
+        await db.ref('Murid').child(nama).update({f: url});
         if (mounted) {
           setState(() {
             if (foto == 1) {
-              image1 = url;
+              image1 = fotos;
             }
             if (foto == 2) {
-              image2 = url;
+              image2 = fotos;
             }
           });
           Navigator.pop(context);
@@ -282,7 +289,7 @@ class _RegisterState extends State<Register> {
                                             Center(child: Text('Foto profil')),
                                       ),
                                     )
-                                  : Image.network(image1!),
+                                  : Image.memory(image1!,width: 250,height: 350,fit: BoxFit.cover,),
                               const SizedBox(
                                 height: 8,
                               ),
@@ -302,7 +309,7 @@ class _RegisterState extends State<Register> {
                                         ),
                                       ),
                                     )
-                                  : Image.network(image2!),
+                                  : Image.memory(image2!,width: 250,height: 350,fit: BoxFit.cover,),
                             ],
                           ),
                         ),
