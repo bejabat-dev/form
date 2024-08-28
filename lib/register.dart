@@ -111,10 +111,10 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  String dateCreated(){
+  String dateCreated() {
     DateTime now = DateTime.now();
-    var currentDate = DateTime(now.day,now.month,now.year);
-    return currentDate.toString();
+    String formattedDate = DateFormat('dd-MM-yyyy').format(now);
+    return formattedDate;
   }
 
   void daftar() async {
@@ -336,8 +336,8 @@ class _RegisterState extends State<Register> {
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: Utils.myColor)),
-                                        child:
-                                            const Center(child: Text('Foto profil')),
+                                        child: const Center(
+                                            child: Text('Foto profil')),
                                       ),
                                     )
                                   : Image.memory(
