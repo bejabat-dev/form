@@ -111,6 +111,12 @@ class _RegisterState extends State<Register> {
     });
   }
 
+  String dateCreated(){
+    DateTime now = DateTime.now();
+    var currentDate = DateTime(now.day,now.month,now.year);
+    return currentDate.toString();
+  }
+
   void daftar() async {
     if (formKey.currentState?.validate() ?? false) {
       final registrationData = RegistrationData(
@@ -123,7 +129,7 @@ class _RegisterState extends State<Register> {
           foto3: 'unset',
           register: true,
           biaya: int.parse(biaya.text),
-          tanggalBergabung: DateTime.now());
+          tanggalBergabung: dateCreated());
 
       await Utils().register(context, nama.text, registrationData.toJson());
     }

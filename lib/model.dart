@@ -8,7 +8,7 @@ class RegistrationData {
   final String foto3;
   final bool register;
   final int biaya;
-  final DateTime tanggalBergabung;
+  final String tanggalBergabung;
 
   RegistrationData({
     required this.key,
@@ -34,7 +34,7 @@ class RegistrationData {
       'foto3': foto3,
       'register': register,
       'biaya': biaya,
-      'now':tanggalBergabung
+      'tanggalBergabung':tanggalBergabung
     };
   }
 }
