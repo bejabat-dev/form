@@ -1,11 +1,10 @@
-
-
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:form/model.dart';
 import 'package:form/utils.dart';
 import 'package:intl/intl.dart';
 
@@ -26,8 +25,9 @@ class _RegisterState extends State<Register> {
   final tempat = TextEditingController();
   final tanggal = TextEditingController();
   final alamat = TextEditingController();
+  final biaya = TextEditingController();
 
-  List<String> kelas = ['Reguler', 'Prestasi', 'Khusus'];
+  List<String> kelas = ['Reguler', 'Khusus', 'Prestasi'];
   String selectedKelas = 'Reguler';
 
   DateTime? _selectedDate;
@@ -51,8 +51,8 @@ class _RegisterState extends State<Register> {
     }
   }
 
-   Uint8List? image1;
-   Uint8List? image2;
+  Uint8List? image1;
+  Uint8List? image2;
 
   String formattedDate(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
@@ -66,7 +66,7 @@ class _RegisterState extends State<Register> {
           const SnackBar(content: Text('Masukkan nama terlebih dahulu')));
       return;
     }
-  final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
 
@@ -88,10 +88,9 @@ class _RegisterState extends State<Register> {
     }
     utils.showLoadingDialog(context);
     final path = storage.ref('$f@$nama');
-    path.putData(fotos!,SettableMetadata(
-
-        contentType: "image/png"
-    )).catchError((e) {
+    path
+        .putData(fotos!, SettableMetadata(contentType: "image/png"))
+        .catchError((e) {
       return utils.showCustomDialog(context, 'Terjadi kesalahan');
     }).whenComplete(() async {
       if (mounted) {
@@ -114,17 +113,26 @@ class _RegisterState extends State<Register> {
 
   void daftar() async {
     if (formKey.currentState?.validate() ?? false) {
-      await Utils().register(context, nama.text, {
-        'key': nama.text,
-        'nama': nama.text,
-        'tanggal': tanggal.text,
-        'tempat': tempat.text,
-        'alamat': alamat.text,
-        'kelas': selectedKelas,
-        'foto3': 'unset',
-        'register': true
-      });
+      final registrationData = RegistrationData(
+          key: nama.text,
+          nama: nama.text,
+          tanggal: tanggal.text,
+          tempat: tempat.text,
+          alamat: alamat.text,
+          kelas: selectedKelas,
+          foto3: 'unset',
+          register: true,
+          biaya: int.parse(biaya.text),
+          tanggalBergabung: DateTime.now());
+
+      await Utils().register(context, nama.text, registrationData.toJson());
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    biaya.text = '250000';
   }
 
   @override
@@ -258,7 +266,44 @@ class _RegisterState extends State<Register> {
                           }).toList(),
                           onChanged: (value) {
                             selectedKelas = value!;
+                            switch (selectedKelas) {
+                              case 'Reguler':
+                                {
+                                  biaya.text = '250000';
+                                  break;
+                                }
+                              case 'Khusus':
+                                {
+                                  biaya.text = '350000';
+                                  break;
+                                }
+                              case 'Prestasi':
+                                {
+                                  biaya.text = '450000';
+                                  break;
+                                }
+                            }
                           },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Tidak boleh kosong';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        const Text('Biaya'),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        TextFormField(
+                          controller: biaya,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.all(8),
+                              prefixText: 'Rp'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Tidak boleh kosong';
@@ -289,7 +334,12 @@ class _RegisterState extends State<Register> {
                                             Center(child: Text('Foto profil')),
                                       ),
                                     )
-                                  : Image.memory(image1!,width: 250,height: 350,fit: BoxFit.cover,),
+                                  : Image.memory(
+                                      image1!,
+                                      width: 250,
+                                      height: 350,
+                                      fit: BoxFit.cover,
+                                    ),
                               const SizedBox(
                                 height: 8,
                               ),
@@ -309,7 +359,12 @@ class _RegisterState extends State<Register> {
                                         ),
                                       ),
                                     )
-                                  : Image.memory(image2!,width: 250,height: 350,fit: BoxFit.cover,),
+                                  : Image.memory(
+                                      image2!,
+                                      width: 250,
+                                      height: 350,
+                                      fit: BoxFit.cover,
+                                    ),
                             ],
                           ),
                         ),
