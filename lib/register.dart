@@ -291,7 +291,7 @@ class _RegisterState extends State<Register> {
                             return null;
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         const Text('Biaya'),
@@ -331,7 +331,7 @@ class _RegisterState extends State<Register> {
                                             border: Border.all(
                                                 color: Utils.myColor)),
                                         child:
-                                            Center(child: Text('Foto profil')),
+                                            const Center(child: Text('Foto profil')),
                                       ),
                                     )
                                   : Image.memory(
@@ -354,7 +354,7 @@ class _RegisterState extends State<Register> {
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: Utils.myColor)),
-                                        child: Center(
+                                        child: const Center(
                                           child: Text('Dokumen tambahan'),
                                         ),
                                       ),

@@ -14,12 +14,16 @@ class Utils {
   Future<void> register(BuildContext context, String nama, dynamic data) async {
     showLoadingDialog(context);
     await db.ref('Murid').child(nama).update(data).catchError((e) {
-      Navigator.pop(context);
-      showCustomDialog(context, 'Terjadi kesalahan');
+      if (context.mounted) {
+        Navigator.pop(context);
+        showCustomDialog(context, 'Terjadi kesalahan');
+      }
     }).whenComplete(() {
-      Navigator.pop(context);
-      showCustomDialog(
-          context, 'Pendaftaran berhasil! Silahkan menunggu konfirmasi admin.');
+      if (context.mounted) {
+        Navigator.pop(context);
+        showCustomDialog(context,
+            'Pendaftaran berhasil! Silahkan menunggu konfirmasi admin.');
+      }
     });
   }
 
@@ -35,10 +39,11 @@ class Utils {
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => Register()),
+                          MaterialPageRoute(
+                              builder: (context) => const Register()),
                           (route) => false);
                     },
-                    child: Text("Konfirmasi")),
+                    child: const Text("Konfirmasi")),
               )
             ],
           );
